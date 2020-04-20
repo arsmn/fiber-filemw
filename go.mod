@@ -1,6 +1,6 @@
 module github.com/arsmn/fiber-filemw
 
-go 1.14
+go 1.11
 
 require (
 	github.com/gofiber/fiber v1.9.0
