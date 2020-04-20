@@ -15,10 +15,11 @@ import (
 
 func main() {
 	app := fiber.New()
+	dir := pkger.Dir("/assets")
 
 	app.Use(mw.New(mw.Config{
 		Prefix: "/assets",
-		Root:   pkger.Dir("/assets"),
+		Root:  dir,
 	}))
 
 	app.Listen(8080)
@@ -43,6 +44,30 @@ func main() {
 	app.Use(mw.New(mw.Config{
 		Prefix: "/assets",
 		Root:   assetsBox,
+	}))
+
+	app.Listen(8080)
+}
+```
+
+### go.rice
+
+```go
+package main
+
+import (
+	mw "github.com/arsmn/fiber-filemw"
+	"github.com/gofiber/fiber"
+	rice "github.com/GeertJohan/go.rice"
+)
+
+func main() {
+	app := fiber.New()
+	assetsBox := rice.MustFindBox("assets")
+
+	app.Use(mw.New(mw.Config{
+		Prefix: "/assets",
+		Root:   assetsBox.HTTPBox(),
 	}))
 
 	app.Listen(8080)
