@@ -5,6 +5,14 @@ FileServer middleware for `fiber`
 ### pkger
 
 ```go
+package main
+
+import (
+	mw "github.com/arsmn/fiber-filemw"
+	"github.com/gofiber/fiber"
+	"github.com/markbates/pkger"
+)
+
 func main() {
 	app := fiber.New()
 
@@ -20,11 +28,19 @@ func main() {
 ### packr
 
 ```go
+package main
+
+import (
+	mw "github.com/arsmn/fiber-filemw"
+	"github.com/gofiber/fiber"
+	"github.com/gobuffalo/packr/v2"
+)
+
 func main() {
 	app := fiber.New()
 	assetsBox := packr.New("Assets Box", "/assets")
 
-	app.Use(New(Config{
+	app.Use(mw.New(mw.Config{
 		Prefix: "/assets",
 		Root:   assetsBox,
 	}))
