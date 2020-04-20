@@ -16,7 +16,7 @@ import (
 func main() {
 	app := fiber.New()
 
-	app.Use(New(Config{
+	app.Use(mw.New(mw.Config{
 		Prefix: "/assets",
 		Root:   pkger.Dir("/assets"),
 	}))
