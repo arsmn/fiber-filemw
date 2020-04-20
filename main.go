@@ -52,31 +52,42 @@ func New(config ...Config) func(*fiber.Ctx) {
 			c.Next()
 			return
 		}
-
 		p = strings.TrimPrefix(p, cfg.Prefix)
-		if c.Method() == fiber.MethodGet || c.Method() == fiber.MethodHead {
-			file, err := cfg.Root.Open(filepath.Clean(p))
-			if err != nil {
-				cfg.ErrorHandler(c, err)
-				return
-			}
 
-			stat, err := file.Stat()
-			if err != nil {
-				cfg.ErrorHandler(c, err)
-				return
-			}
-
-			contentType, err := detectContentType(file, stat)
-			if err != nil {
-				cfg.ErrorHandler(c, err)
-				return
-			}
-
-			c.Fasthttp.SetContentType(contentType)
-			c.Fasthttp.SetBodyStream(file, int(stat.Size()))
+		file, err := cfg.Root.Open(filepath.Clean(p))
+		if err != nil {
+			cfg.ErrorHandler(c, err)
 			return
 		}
+
+		stat, err := file.Stat()
+		if err != nil {
+			cfg.ErrorHandler(c, err)
+			return
+		}
+		contentLength := int(stat.Size())
+
+		contentType, err := detectContentType(file, stat)
+		if err != nil {
+			cfg.ErrorHandler(c, err)
+			return
+		}
+
+		c.Fasthttp.SetContentType(contentType)
+		if c.Method() == fiber.MethodGet {
+			c.Fasthttp.SetBodyStream(file, contentLength)
+			return
+		} else if c.Method() == fiber.MethodHead {
+			c.Fasthttp.ResetBody()
+			c.Fasthttp.Response.SkipBody = true
+			c.Fasthttp.Response.Header.SetContentLength(contentLength)
+			if err := file.Close(); err != nil {
+				cfg.ErrorHandler(c, err)
+				return
+			}
+			return
+		}
+
 		c.Next()
 	}
 }
