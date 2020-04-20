@@ -3,6 +3,7 @@ package filemw
 import (
 	"log"
 	"net/http"
+	"path"
 	"strings"
 
 	"github.com/gofiber/fiber"
@@ -46,7 +47,7 @@ func New(config ...Config) func(*fiber.Ctx) {
 
 		p = strings.TrimPrefix(p, cfg.Prefix)
 		if c.Method() == fiber.MethodGet || c.Method() == fiber.MethodHead {
-			file, err := cfg.Root.Open(p)
+			file, err := cfg.Root.Open(path.Clean(p))
 			if err != nil {
 				cfg.ErrorHandler(c, err)
 				return
