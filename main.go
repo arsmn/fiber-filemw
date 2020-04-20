@@ -1,4 +1,4 @@
-package main
+package filemw
 
 import (
 	"log"
@@ -7,10 +7,6 @@ import (
 
 	"github.com/gofiber/fiber"
 )
-
-func main() {
-
-}
 
 type Config struct {
 	Prefix       string
