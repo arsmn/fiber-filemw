@@ -1,5 +1,7 @@
 # fiber-filemw
 
+**NOTICE: Migrated to [github.com/gofiber/embed](https://github.com/gofiber/embed) as an official middleware.**
+
 FileServer middleware for `fiber`
 
 ### pkger
